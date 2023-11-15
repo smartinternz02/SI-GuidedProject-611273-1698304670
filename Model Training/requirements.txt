@@ -1,0 +1,6 @@
+python-multipart
+Pillow
+spacy-lookups-data
+uvicorn
+fastapi
+tensorflow==2.12.0
