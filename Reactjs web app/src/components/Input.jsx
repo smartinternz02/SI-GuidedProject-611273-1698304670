@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import "./index.css"
 
 const ImageInput = () => {
   const [selectedImage, setSelectedImage] = useState(null);
+  const [data, setData] = useState([]);
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -17,24 +19,28 @@ const ImageInput = () => {
       const formData = new FormData();
       formData.append('image_f', file);
 
-      // Replace 'https://potato-leaf-disease-detect-api-production.up.railway.app/predict' with your endpoint URL
-      fetch('https://potato-leaf-disease-detect-api-production.up.railway.app/predict', {
+      fetch('https://potato-leaf-disease.onrender.com/predict', {
         method: 'POST',
         body: formData,
       })
-        .then(response => {
-          if (response.ok) {
-            return response.json();
+        .then((response) => response.json())
+        .then((responseData) => {
+          if (Array.isArray(responseData)) {
+            const updatedData = responseData.map((item) => ({
+              ...item,
+              model_pred: item.model_pred.replace(/_/g, ' '), // Replace underscores with spaces
+            }));
+            setData(updatedData);
+          } else {
+            const updatedResponseData = {
+              ...responseData,
+              model_pred: responseData.model_pred.replace(/_/g, ' '), // Replace underscores with spaces
+            };
+            setData([updatedResponseData]); // Wrap non-array response in an array
           }
-          throw new Error('Network response was not ok.');
         })
-        .then(data => {
-          console.log('Image uploaded successfully:', data);
-          // Handle the response data as needed
-        })
-        .catch(error => {
+        .catch((error) => {
           console.error('Error uploading image:', error);
-          // Handle the error
         });
     }
   };
@@ -43,11 +49,14 @@ const ImageInput = () => {
     <div>
       <input type="file" accept="image/*" onChange={handleImageChange} />
       {selectedImage && (
-        <div>
+        <div className='selected-image-container'>
           <h2>Selected Image:</h2>
           <img src={selectedImage} alt="Selected" style={{ maxWidth: '300px' }} />
         </div>
       )}
+      {data.map((item, index) => (
+        <p key={index}>{item.model_pred}</p>
+      ))}
     </div>
   );
 };
