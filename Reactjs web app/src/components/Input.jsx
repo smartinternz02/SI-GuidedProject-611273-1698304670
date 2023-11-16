@@ -28,15 +28,15 @@ const ImageInput = () => {
           if (Array.isArray(responseData)) {
             const updatedData = responseData.map((item) => ({
               ...item,
-              model_pred: item.model_pred.replace(/_/g, ' '), // Replace underscores with spaces
+              model_pred: item.model_pred.replace(/_/g, ' '),
             }));
             setData(updatedData);
           } else {
             const updatedResponseData = {
               ...responseData,
-              model_pred: responseData.model_pred.replace(/_/g, ' '), // Replace underscores with spaces
+              model_pred: responseData.model_pred.replace(/_/g, ' '),
             };
-            setData([updatedResponseData]); // Wrap non-array response in an array
+            setData([updatedResponseData]);
           }
         })
         .catch((error) => {
