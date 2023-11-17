@@ -11,17 +11,10 @@ import numpy as np
 
 app = FastAPI()
 
-origins = [
-    "https://potato-leaf-disease-detect-api-production.up.railway.app",
-    "https://potato-leaf-disease-detect-api-production.up.railway.app/predict",
-    "http://localhost",
-    "http://localhost:8080",
-    "http://localhost:5173/"
-]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"]
